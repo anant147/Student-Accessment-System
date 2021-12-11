@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+   <!-- <a href = "/loginpage">Logout</a> -->
+   <div class="collapse navbar-collapse navbar-light" id="navbarsExample05">
+   <ul class="navbar-nav absolute-right">
+        <li class="nav-item">
+          <i>Logged in as Teacher</i>
+        </li>
+        <li class="nav-item">
+          <a href="/loginpage" class="nav-link">Logout</a>
+        </li>
+        
+      </ul>
+   </div>
+
+  
+
+   <body>
+      
+        
+        <br>
+      <table border = 1 style="width:100%" <caption> <b>List of Student </b></caption> 
+         <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>ID Student </b> </td>
+            <td> <b>Name </b> </td>
+            <td> <b>Gender </b> </td>
+            <td> <b>Region </b> </td>
+            <td> <b>Highest Education </b> </td>
+            <td> <b>IMD Band </b> </td>
+            <td> <b>Age Band </b> </td>
+            <td> <b>Num Of Prev Attempts </b> </td>
+            <td> <b>Studied Credits </b> </td>
+            <td> <b>Disability </b> </td>
+            <td> <b>Final Result </b> </td>
+         </thead>
+         {% for row in rows %}
+            <tr>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               <td>{{row[2]}}</td>
+               <td>{{row[3]}}</td>	
+               <td>{{row[4]}}</td>
+               <td>{{row[5]}}</td>
+               <td>{{row[6]}}</td>
+               <td>{{row[7]}}</td>
+               <td>{{row[8]}}</td>  
+               <td>{{row[9]}}</td>
+                <td>{{row[10]}}</td>
+                <td>{{row[11]}}</td>
+                 <td>{{row[12]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      
+     
+      
+   </body>
+</html>

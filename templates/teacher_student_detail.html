@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+
+
+
+  <head>
+    <title>Colorlib Listed Directory Template</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/animate.css">
+    <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
+
+    <link rel="stylesheet" href="/static/fonts/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/fonts/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css">
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+  <body>
+    
+    <header role="banner">
+     
+      <nav class="navbar navbar-expand-md navbar-dark bg-light">
+        <div class="container">
+          <a class="navbar-brand absolute" href="index.html">Skwela</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse navbar-light" id="navbarsExample05">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="courses.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Online Courses</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                   <a class="dropdown-item" href="courses.html">Database Systems</a>
+                  <a class="dropdown-item" href="courses.html">Computer Network</a>
+                  <a class="dropdown-item" href="courses.html">Natural Language Processing</a>
+                  <a class="dropdown-item" href="courses.html">Operating Systems</a>
+                  <a class="dropdown-item" href="courses.html">Machine Learning</a>
+                  <a class="dropdown-item" href="courses.html">Data Science</a>
+                  <a class="dropdown-item" href="courses.html">Image Processing</a>
+                </div>
+
+              </li>
+
+              <li class="nav-item dropdown">
+                 <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code Presenation</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown05">
+                  <a class="dropdown-item" href="#">2013 B</a>
+                  <a class="dropdown-item" href="#">2013 J</a>
+                  <a class="dropdown-item" href="#">2014 B</a>
+                  <a class="dropdown-item" href="#">2014 J</a>
+                  
+                </div>
+
+              </li>
+             
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li>
+            </ul>
+            <!-- <ul class="navbar-nav absolute-right">
+              <li class="nav-item">
+                <a href="login.html" class="nav-link">Login</a>
+              </li>
+              <li class="nav-item">
+                <a href="register.html" class="nav-link">Register</a>
+              </li>
+            </ul> -->
+             <li class="nav-item">
+                <i>Logged in as Teacher</i>
+            </li>
+            <li class="nav-item">
+              <a href="/loginpage" class="nav-link">Logout</a>
+            </li>
+            
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- END header -->
+
+      <script>
+        var teacherid={{teacherid}};
+        var codemodule={{codemodule}};
+        var codepresentation={{codepresentation}};
+        
+             
+      </script>
+
+    <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url(/static/images/big_image_1.jpg);">
+      <div class="container">
+        <div class="row align-items-center site-hero-inner justify-content-center">
+          <div class="col-md-8 text-center">
+
+            <div class="mb-5 element-animate">
+              <h1>Teacher: Course Student Detail</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+
+
+    <section class="site-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center">
+            <h2> Student Detail for Teacher ID: - {{teacherid}}, Code Module: - {{codemodule}} and Code Presentation: - {{codepresentation}} </h2>
+
+
+            <!-- <p class="le<center>
+    <table border="1">
+      <tr>ad">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum magnam illum maiores adipisci pariatur, eveniet.</p> -->
+
+      <center>
+      <!-- <caption> <b>Resultwise Student Count</b> </caption> -->
+      <p><font size="5" color="blue"> <u>Resultwise Student Count </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Result Type </b> </td>
+            <td> <b>Count </b> </td>
+         </thead>
+         {% for row in rowsResultWiseStudentCount %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+    <br />
+    <center>
+      <!-- <caption> <b>Resultwise Student Count</b> </caption> -->
+      <p><font size="5" color="blue"> <u>Resultwise Student Name </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Student ID </b> </td>
+            <td> <b>Student Name </b> </td>
+            <td> <b>Result </b> </td>
+         </thead>
+         {% for row in rowsCourseStudent %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               <td>{{row[2]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+
+     <br />
+     <center>
+      <!-- <caption> <b>Resultwise Student Count</b> </caption> -->
+      <p><font size="5" color="blue"> <u>Genderwise Student Count </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Gender </b> </td>
+            <td> <b>Count </b> </td>
+         </thead>
+         {% for row in rowsGenderWiseStudentCount %}
+            <tr>
+               <!-- <td>{{row[0]}}</td> -->
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+                {% if row[0] == 'M' %}
+               <td>Male  </td>
+               {% else %}
+               <td> Female</td>
+               {% endif %}
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+     <br />
+     <center>
+       <p><font size="5" color="blue"> <u>Regionwise Student Count </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Region </b> </td>
+            <td> <b>Count </b> </td>
+         </thead>
+         {% for row in rowsRegionWiseStudentCount %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+     <br />
+    <center>
+       <p><font size="5" color="blue"> <u>Ht Education wise Student Count </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Ht Education </b> </td>
+            <td> <b>Count </b> </td>
+         </thead>
+         {% for row in rowsHtEdWiseStudentCount %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+     <br />
+    <center>
+       <p><font size="5" color="blue"> <u>IMD Band wise Student Count </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>IMD Band </b> </td>
+            <td> <b>Count </b> </td>
+         </thead>
+         {% for row in rowsIMDBandWiseStudentCount %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+     <br />
+    <center>
+       <p><font size="5" color="blue"> <u>Age Band wise Student Count </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Age Band </b> </td>
+            <td> <b>Count </b> </td>
+         </thead>
+         {% for row in rowsAgeBandWiseStudentCount %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+
+    <br />
+    <center>
+       <p><font size="5" color="blue"> <u>Result wise Student percentage </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Result Type </b> </td>
+            <td> <b>Percentage </b> </td>
+         </thead>
+         {% for row in rowsStudentResultPercent %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+    
+     <br />
+    <center>
+       <p><font size="5" color="blue"> <u>Course Result Summary of Student </u></font></p>
+      <table border="1" cellpadding="3"> 
+          <thead>
+            <td> <b>Code Module </b> </td>
+            <td> <b>Code Presentation </b> </td>
+            <td> <b>Criteria </b> </td>
+            <td> <b>Value </b> </td>
+         </thead>
+         {% for row in rowsStudentResultSummary %}
+            <tr>
+               <td>{{codemodule}}</td>
+               <td>{{codepresentation}}</td>
+               <td>{{row[0]}}</td>
+               <td>{{row[1]}}</td>
+               
+            </tr>
+         {% endfor %}
+      </table>
+    </center>
+
+
+
+     
+
+
+     <br />
+     <center>
+      <p><font size="5" color="blue"> <u> Other Information </u></font></p>
+     <table border="1" cellpadding="3">
+     <tr> <td> No. of Disabled Student </td>  <td>  {{rowsDisabledStudentCount[0]}} </td> </tr>
+     <tr> <td> No. of Student Registered after course start  </td> <td>  {{rowsRegAfterCourseStStudentCount[0]}} </td>  </tr>
+     <tr> <td> No. of Student withdrawn from course </td> <td>  {{rowsWithdrawnStudentCount[0]}} </td> </tr>
+     <tr> <td> No. of total Student in course </td> <td>   {{rowsStudentCount[0]}} </td> </tr>
+     <tr> <td> No. of total VLE visit of course </td> <td>   {{rowsCourseVLEVisit[0]}} </td> </tr>
+    </table>
+  </center>
+
+   <!-- 
+    <center>
+       <p><font size="5" color="blue"> <u>No. of Disabled Student </u></font></p>
+      {{rowsDisabledStudentCount[0]}}
+    </center>
+
+    <br />
+    <center>
+       <p><font size="5" color="blue"> <u>No. of Student Registered after course start </u></font></p>
+      {{rowsRegAfterCourseStStudentCount[0]}}
+    </center>
+
+    <br />
+    <center>
+       <p><font size="5" color="blue"> <u>No. of Student withdrawn from course </u></font></p>
+      {{rowsWithdrawnStudentCount[0]}}
+    </center>
+
+     <br />
+    <center>
+       <p><font size="5" color="blue"> <u>No. of total Student in course </u></font></p>
+      {{rowsStudentCount[0]}}
+    </center> -->
+
+
+
+          </div>
+        </div>
+ <!--        <div class="row blog-entries">
+          <div class="col-md-4 col-sm-6 col-12">
+            <a href="blog-single.html" class="blog-entry">
+              <img src="/static/images/img_1.jpg" alt="Image placeholder">
+              <h2><a href="">Profile</a></h2>
+              <!-- <p>January 3, 2018</p> -->
+            <!-- </a>
+          </div>
+          <div class="col-md-4 col-sm-6 col-12">
+            <a href="blog-single.html" class="blog-entry">
+              <img src="/static/images/img_2.jpg" alt="Image placeholder">
+              <h2><a>Courses</a></h2>
+              <!-- <p>January 3, 2018</p> -->
+ <!--            </a>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-12">
+            <a href="blog-single.html" class="blog-entry">
+              <img src="/static/images/img_3.jpg" alt="Image placeholder">
+              <h2><a>Assessments</a></h2> -->
+             <!--  <p>January 3, 2018</p> -->
+        <!--     </a>
+          </div> --> 
+
+    <!--     </div> -->
+
+        <!-- END row -->
+
+ <!--        <div class="row blog-entries">
+          <div class="col-md-4 col-sm-6 col-12">
+            <a href="blog-single.html" class="blog-entry">
+              <img src="/static/images/img_2.jpg" alt="Image placeholder">
+              <h2>College vs. ELearning</h2>
+              <p>January 3, 2018</p>
+            </a>
+          </div>
+          <div class="col-md-4 col-sm-6 col-12">
+            <a href="blog-single.html" class="blog-entry">
+              <img src="/static/images/img_3.jpg" alt="Image placeholder">
+              <h2>Learn How To Develop WordPress Plugin</h2>
+              <p>January 3, 2018</p>
+            </a>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-12">
+            <a href="blog-single.html" class="blog-entry">
+              <img src="/static/images/img_1.jpg" alt="Image placeholder">
+              <h2>Why We Love To Teach You</h2>
+              <p>January 3, 2018</p>
+            </a>
+          </div>
+
+        </div> -->
+
+        <!-- END row -->
+
+       
+      </div>
+   </section>
+    <!-- END section -->
+
+    <!-- <center>
+    <table border="1">
+      <tr> -->
+        <!-- id_teacher is not written , it will be used for navigationg to other page - row[4] -->
+       <!--  <th>Code Module</th>
+        <th>Code presentation</th>
+        <th>Subject </th>
+        <th>Teacher</th>
+        <th>Result</th>
+        <th>Show</th>
+
+        {% for row in output %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+          <td>{{ row[3] }}</td>
+          <td>{{ row[5] }}</td>
+          <td><a href="">Show</a></td>
+        </tr>
+        {% endfor %}
+      </tr>
+    </table>
+  </center>  -->
+
+
+   <!--  <section class="site-section">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center">
+            <h2></h2>
+            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum magnam illum maiores adipisci pariatur, eveniet.</p>
+          </div>
+        </div>
+        <section class="school-features text-dark d-flex">
+
+          <div class="inner">
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_1.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3>
+               <a href="{{url_for('show_student_profile',student_id=studentid)}}">
+                 Profile
+                </a></h3>
+               
+              </div>
+            </div>
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_2.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">
+               <a href="{{url_for('list_student_courses',student_id=studentid)}}">Courses</a></h3>
+               
+              </div>
+            </div>
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_3.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">
+                <a href="{{url_for('list_student_assessment',student_id=studentid)}}"> Assessments</a></h3>
+              
+              </div>
+            </div>
+
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_4.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">
+                <a href="{{url_for('list_recommedned_course',student_id=studentid)}}">Recomended Courses</a></h3>
+              <p>Harum, adipisci, aspernatur. Vero repudiandae quos ab debitis, fugiat culpa obcaecati, voluptatibus ad distinctio cum soluta fugit sed animi eaque?</p> -->
+        <!--       </div>
+            </div>
+          </div>
+        </section> -->
+
+
+  <!--        <section class="school-features text-dark last d-flex">
+
+          <div class="inner">
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_1.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">Rhea Smith</h3>
+                <p class="instructor-meta">WordPress Expert</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora fuga suscipit numquam esse saepe quam, eveniet iure assumenda dignissimos aliquam!</p>
+              </div>
+            </div>
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_2.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">Gregg White</h3>
+                <p class="instructor-meta">Photoshop Expert</p>
+                <p>Delectus fuga voluptatum minus amet, mollitia distinctio assumenda voluptate quas repellat eius quisquam odio. Aliquam, laudantium, optio? Error velit, alias.</p>
+              </div>
+            </div>
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_3.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">Rob Gold</h3>
+                <p class="instructor-meta">Web Design Expert</p>
+                <p>Delectus fuga voluptatum minus amet, mollitia distinctio assumenda voluptate quas repellat eius quisquam odio. Aliquam, laudantium, optio? Error velit, alias.</p>
+              </div>
+            </div>
+
+
+            <div class="media d-block feature text-center">
+              <img src="/static/images/person_4.jpg" alt="Image placeholder" class="mb-3">
+              <div class="media-body">
+                <h3 class="mt-0">Wennie Poe</h3>
+                <p class="instructor-meta">React JS Expert</p>
+                <p>Harum, adipisci, aspernatur. Vero repudiandae quos ab debitis, fugiat culpa obcaecati, voluptatibus ad distinctio cum soluta fugit sed animi eaque?</p>
+              </div>
+            </div>
+          </div>
+
+
+        </section> -->
+
+
+      </div>
+    </section>
+    <!-- END section -->
+
+    
+
+
+    
+  
+    <footer class="site-footer" style="background-image: url(/static/images/big_image_3.jpg);">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-4">
+            <h3>About</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, accusantium optio unde perferendis eum illum voluptatibus dolore tempora, consequatur minus asperiores temporibus reprehenderit.</p>
+          </div>
+          <div class="col-md-6 ml-auto">
+            <div class="row">
+              <div class="col-md-4">
+                <ul class="list-unstyled">
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Company</a></li>
+                  <li><a href="#">Teachers</a></li>
+                  <li><a href="#">Courses</a></li>
+                  <li><a href="#">Categories</a></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <ul class="list-unstyled">
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Company</a></li>
+                  <li><a href="#">Teachers</a></li>
+                  <li><a href="#">Courses</a></li>
+                  <li><a href="#">Categories</a></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <ul class="list-unstyled">
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Company</a></li>
+                  <li><a href="#">Teachers</a></li>
+                  <li><a href="#">Courses</a></li>
+                  <li><a href="#">Categories</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- END footer -->
+    
+    <!-- loader -->
+    <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>
+
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/jquery-migrate-3.0.0.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/owl.carousel.min.js"></script>
+    <script src="/static/js/jquery.waypoints.min.js"></script>
+    <script src="/static/js/jquery.stellar.min.js"></script>
+
+    
+    <script src="/static/js/main.js"></script>
+<!--     <script src="/static/js/a.js"></script>
+ -->  </body>
+</html>

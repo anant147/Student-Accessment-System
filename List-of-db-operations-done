@@ -1,0 +1,1757 @@
+
+Internal Implementation
+
+1. New Tables
+   create table teacher(
+		id_teacher integer,
+		name varchar(100),
+		profile varchar(100),
+		qualification varchar(100),
+		about varchar(500),
+		expertise text[],
+		email varchar(100),
+		phone_no varchar(100),
+	);
+
+	create table teacher_course(
+		id_teacher integer,
+		code_module varchar(45),
+		code_presentation varchar(45),
+		subject_name varchar(45),
+	);
+
+	create table subject_name(
+		 code_module varchar(45),
+		 subject_name varchar(45),
+	);
+
+	create table course_commencement_date(
+		 code_presentation varchar(45),
+		 commencement_date date,
+	);
+
+	create table site_name(
+		 id_site integer,
+		 site_name varchar(45),
+	);
+
+	create table login_info(
+		 login_id text,
+		 password text,
+		 login_role text,
+	);
+
+	create table student_basic(
+		 id_student integer,
+		 name varchar(45),
+	);
+
+	create table student_main_info(
+		id_student integer,
+		name varchar(45),
+		gender varchar(45),
+		region varchar(45),
+	);
+
+	create table stud_grade(
+		 code_module varchar(45),
+		 code_presentation varchar(45),
+		 id_student integer,
+		 student_name varchar(45),
+		 final_result varchar(45),
+		 grade varchar(45),
+		 primary key (code_module,code_presentation,id_student)
+	 );
+
+2. Constraints
+	2.1 Primary Keys
+
+	ALTER TABLE courses
+	ADD CONSTRAINT PK_courses PRIMARY KEY (code_module,code_presentation);
+
+	ALTER TABLE assessments
+	ADD CONSTRAINT PK_assessments PRIMARY KEY (code_module,code_presentation,id_assessment);
+
+	ALTER TABLE vle
+	ADD CONSTRAINT PK_vle PRIMARY KEY (id_site, code_module,code_presentation);
+
+	ALTER TABLE studentInfo
+	ADD CONSTRAINT PK_studentInfo PRIMARY KEY (code_module,code_presentation,id_student);
+
+	ALTER TABLE studentRegistration
+	ADD CONSTRAINT PK_studentRegistration PRIMARY KEY (code_module,code_presentation,id_student);
+
+	ALTER TABLE studentAssessment
+	ADD CONSTRAINT PK_studentAssessment PRIMARY KEY (id_assessment,id_student);
+
+	ALTER TABLE studentVle
+	ADD CONSTRAINT PK_studentVle PRIMARY KEY (id_studentVle);
+
+	ALTER TABLE teacher
+	ADD CONSTRAINT PK_teacher PRIMARY KEY (id_teacher);
+
+	ALTER TABLE teacher_course
+	ADD CONSTRAINT PK_teacher_course PRIMARY KEY (id_teacher,code_module,code_presentation);
+
+	ALTER TABLE subject_name
+	ADD CONSTRAINT PK_subject_name PRIMARY KEY (code_module);
+
+	ALTER TABLE course_commencement_date
+	ADD CONSTRAINT PK_course_commencement_date PRIMARY KEY (code_presentation);
+
+	ALTER TABLE site_name
+	ADD CONSTRAINT PK_site_name PRIMARY KEY (id_site);
+
+	ALTER TABLE login_info
+	ADD CONSTRAINT PK_login_info PRIMARY KEY (login_id);
+	
+	ALTER TABLE student_basic
+	ADD CONSTRAINT PK_student_basic PRIMARY KEY (id_student);
+	
+	ALTER TABLE student_main_info
+	ADD CONSTRAINT PK_student_main_info PRIMARY KEY (id_student);
+
+
+	2.2 Foreign Keys
+
+	ALTER TABLE studentinfo
+	ADD CONSTRAINT FK_studentinfo1
+	FOREIGN KEY (code_module,code_presentation) REFERENCES courses(code_module,code_presentation) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+    ALTER TABLE studentinfo
+	ADD CONSTRAINT FK_studentinfo2
+	FOREIGN KEY (id_student) REFERENCES student_main_info(id_student) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+	ALTER TABLE assessments
+	ADD CONSTRAINT FK_assessments1
+	FOREIGN KEY (code_module,code_presentation) REFERENCES courses(code_module,code_presentation) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+	ALTER TABLE studentregistration
+	ADD CONSTRAINT FK_studentregistration1
+	FOREIGN KEY (code_module,code_presentation) REFERENCES courses(code_module,code_presentation) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+    ALTER TABLE studentregistration
+	ADD CONSTRAINT FK_studentregistration2
+	FOREIGN KEY (id_student) REFERENCES student_main_info(id_student) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+	ALTER TABLE vle
+	ADD CONSTRAINT FK_vle1
+	FOREIGN KEY (code_module,code_presentation) REFERENCES courses(code_module,code_presentation) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+	ALTER TABLE studentvle
+	ADD CONSTRAINT FK_studentvle1
+	FOREIGN KEY (code_module,code_presentation) REFERENCES courses(code_module,code_presentation) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+    ALTER TABLE studentvle
+	ADD CONSTRAINT FK_studentvle2
+	FOREIGN KEY (id_student) REFERENCES student_main_info(id_student) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+    ALTER TABLE studentassessment
+	ADD CONSTRAINT FK_studentassessment1
+	FOREIGN KEY (id_student) REFERENCES student_main_info(id_student) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+	ALTER TABLE student_name_info
+	ADD CONSTRAINT FK_student_name_info1
+	FOREIGN KEY (id_student) REFERENCES student_main_info(id_student) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+	ALTER TABLE teacher_course
+	ADD CONSTRAINT FK_teacher_course1
+	FOREIGN KEY (code_module,code_presentation) REFERENCES courses(code_module,code_presentation) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+    ALTER TABLE teacher_course
+	ADD CONSTRAINT FK_teacher_course2
+	FOREIGN KEY (id_teacher) REFERENCES teacher(id_teacher) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+	2.3 Checks:
+
+	ALTER TABLE studentinfo
+	ADD CONSTRAINT CHK_studentinfo1 CHECK (gender='M' OR gender='F' OR gender='T');
+
+	ALTER TABLE studentinfo
+	ADD CONSTRAINT CHK_studentinfo2 CHECK (disability='Y' OR disability='N');
+
+	ALTER TABLE studentinfo
+	ADD CONSTRAINT CHK_studentinfo3 CHECK (age_band='55<=' OR age_band='0-35' OR age_band='35-55');
+
+	ALTER TABLE studentinfo
+	ADD CONSTRAINT CHK_studentinfo4 CHECK (highest_education IN ('Lower Than A Level','A Level or Equivalent','HE Qualification','Post Graduate Qualification','No Formal quals'));
+
+	ALTER TABLE studentinfo
+	ADD CONSTRAINT CHK_studentinfo5 CHECK (imd_band IN ('30-40%','40-50%',
+ '60-70%','50-60%','0-10%','20-30%','10-20','80-90%','70-80%','90-100%'));
+
+    ALTER TABLE studentinfo
+	ADD CONSTRAINT CHK_studentinfo6 CHECK (final_result IN (
+	'Pass','Distinction','Withdrawn','Fail', 'Awaiting'));
+
+    ALTER TABLE student_main_info
+	ADD CONSTRAINT CHK_student_basic_info CHECK (gender='M' OR gender='F' OR gender='T');
+
+    ALTER TABLE studentassessment
+	ADD CONSTRAINT CHK_studentassessment1 CHECK (score>=0 and score<=100);
+
+	ALTER TABLE studentassessment
+	ADD CONSTRAINT CHK_studentassessment2 CHECK (is_banked=0 or is_banked=1);
+
+	ALTER TABLE assessments
+	ADD CONSTRAINT CHK_assessments1 CHECK (weight>=0 and weight<=100);
+
+	ALTER TABLE assessments
+	ADD CONSTRAINT CHK_assessments2 CHECK (assessment_type='TMA' OR assessment_type='CMA' OR assessment_type='Exam');
+
+3. Indexes
+	
+	CREATE INDEX idx_studentinfo ON studentinfo (code_module, code_presentation, id_student);
+
+	CREATE INDEX idx_courses ON courses (code_module, code_presentation);
+
+	CREATE INDEX idx_assessments ON assessments (code_module, code_presentation, id_assessment);
+
+	CREATE INDEX idx_studentassessment ON studentassessment (id_assessment, id_student);
+
+	CREATE INDEX idx_studentregistration ON studentregistration (code_module, code_presentation, id_student);
+
+	CREATE INDEX idx_vle ON vle (id_site, code_module, code_presentation);
+
+	CREATE INDEX idx_studentvle ON studentvle (id_studentvle);
+
+	CREATE INDEX idx_student_main_info ON student_main_info (id_student);
+
+	CREATE INDEX idx_student_name_info ON student_name_info (id_student);
+
+	CREATE INDEX idx_course_commencement_date ON course_commencement_date (code_presentation);
+
+	CREATE INDEX idx_teacher ON teacher (id_teacher);
+
+	CREATE INDEX idx_teacher_course ON teacher_course (id_teacher, code_module, code_presentation);
+
+
+4. Sequences
+	
+	CREATE SEQUENCE seq_student_main_info INCREMENT BY 1
+    START WITH 2716796 NO MAXVALUE;
+	ALTER TABLE student_main_info
+	ALTER COLUMN id_student set default nextval('seq_student_main_info');
+
+    CREATE SEQUENCE seq_assessments INCREMENT BY 1
+    START WITH 40089 NO MAXVALUE;
+	ALTER TABLE assessments
+	ALTER COLUMN id_assessment set default nextval('seq_assessments');
+
+	CREATE SEQUENCE seq_vle INCREMENT BY 1
+    START WITH 1077906 NO MAXVALUE;
+	ALTER TABLE vle
+	ALTER COLUMN id_site set default nextval('seq_vle');
+
+	CREATE SEQUENCE seq_assessments INCREMENT BY 1
+    START WITH 40089 NO MAXVALUE;
+	ALTER TABLE assessments
+	ALTER COLUMN id_assessment set default nextval('seq_assessments');
+
+
+5. Views
+
+create MATERIALIZED  view teacher_subject as 
+select teacher_course.*,teacher.name as teacher_name
+from teacher,teacher_course
+where teacher.id_teacher=teacher_course.id_teacher;
+
+
+create MATERIALIZED view tr_sub_date as 
+select teacher_subject.*,course_commencement_date.commencement_date as startdate
+from teacher_subject,course_commencement_date
+where teacher_subject.code_presentation=course_commencement_date.code_presentation;
+
+
+create MATERIALIZED view tr_sub_dat_stid as
+select tr_sub_date.*,studentinfo.id_student,studentinfo.final_result
+from tr_sub_date,studentinfo
+where tr_sub_date.code_presentation=studentinfo.code_presentation
+and tr_sub_date.code_module = studentinfo.code_module;	
+
+
+create MATERIALIZED view tr_sub_dat_stid_stnm as
+select tr_sub_dat_stid.*,student_name_info.name as student_name
+from tr_sub_dat_stid,student_name_info
+where tr_sub_dat_stid.id_student=student_name_info.id_student;	
+
+
+create MATERIALIZED view tr_sub_dat_stid_stnm_amt as
+select tr_sub_dat_stid_stnm.*,assessments.id_assessment, assessments.assessment_type,
+(tr_sub_dat_stid_stnm.startdate)::date+assessments.date as assessmentdate,
+assessments.weight from tr_sub_dat_stid_stnm,assessments
+where tr_sub_dat_stid_stnm.code_module=assessments.code_module
+and tr_sub_dat_stid_stnm.code_presentation=assessments.code_presentation;
+
+
+create MATERIALIZED view tr_sub_dat_stid_stnm_amt_stamt as
+select tr_sub_dat_stid_stnm_amt.*,
+(tr_sub_dat_stid_stnm_amt.startdate)::date+studentassessment.date_submitted as asmtsubmissiondate,
+studentassessment.is_banked,studentassessment.score 
+from tr_sub_dat_stid_stnm_amt left join studentassessment
+on tr_sub_dat_stid_stnm_amt.id_student=studentassessment.id_student
+and tr_sub_dat_stid_stnm_amt.id_assessment=studentassessment.id_assessment;
+
+
+ create MATERIALIZED view course_total_student as 
+ select code_module,code_presentation,count(*) as total_student from studentinfo
+ group by code_module,code_presentation
+  order by code_module,code_presentation;
+
+
+create MATERIALIZED view course_final_result as
+select code_module,code_presentation,final_result,count(*) as total_student from studentinfo
+ group by code_module,code_presentation,final_result
+  order by code_module,code_presentation,final_result;
+
+
+create MATERIALIZED view not_happen_esment as
+select assessments.* from assessments,
+(select distinct(id_assessment)
+from assessments
+except
+select id_assessment from
+(select id_assessment,count(*)
+from studentassessment where
+score is not null
+group by id_assessment) as t1) as t2
+where assessments.id_assessment=t2.id_assessment;
+
+
+create MATERIALIZED view happen_asment as
+select * 
+from assessments
+except
+select * from
+not_happen_esment;
+
+
+create MATERIALIZED view tr_sub_dat_stid_stnm_hapamt as
+select tr_sub_dat_stid_stnm.*,happen_asment.id_assessment, happen_asment.assessment_type,
+(tr_sub_dat_stid_stnm.startdate)::date+happen_asment.date as assessmentdate,
+happen_asment.weight from tr_sub_dat_stid_stnm,happen_asment
+where tr_sub_dat_stid_stnm.code_module=happen_asment.code_module
+and tr_sub_dat_stid_stnm.code_presentation=happen_asment.code_presentation;
+
+
+create MATERIALIZED view tr_sub_dat_stid_stnm_hapamt_stamt as
+select tr_sub_dat_stid_stnm_hapamt.*,
+(tr_sub_dat_stid_stnm_hapamt.startdate)::date+studentassessment.date_submitted as asmtsubmissiondate,
+studentassessment.is_banked,studentassessment.score 
+from tr_sub_dat_stid_stnm_hapamt left join studentassessment
+on tr_sub_dat_stid_stnm_hapamt.id_student=studentassessment.id_student
+and tr_sub_dat_stid_stnm_hapamt.id_assessment=studentassessment.id_assessment;
+
+
+create MATERIALIZED view stud_wgt_hapass_score as
+select code_module,code_presentation,
+id_student,student_name,id_assessment,
+assessment_type,weight,score,
+((weight*score)/100) as aswgtscore from 
+tr_sub_dat_stid_stnm_hapamt_stamt;
+
+
+create MATERIALIZED view stud_asthaptype_agsco as 
+select code_module,code_presentation,
+id_student,student_name,
+assessment_type,sum(weight) as agrweight,
+sum(aswgtscore) as agrscore
+from stud_wgt_hapass_score
+group by code_module,code_presentation,
+id_student,student_name,
+assessment_type;
+
+
+create materialized view stud_ag_exam as 
+select * 
+from stud_asthaptype_agsco
+where assessment_type='Exam';
+
+
+create materialized view stud_ag_tma as 
+select * 
+from stud_asthaptype_agsco
+where assessment_type='TMA';
+
+
+create materialized view stud_ag_cma as 
+select * 
+from stud_asthaptype_agsco
+where assessment_type='CMA';
+
+
+create materialized view stud_ag_cmatma as 
+select code_module,code_presentation,
+id_student,student_name,'CMA+TMA' as assessment_type,
+sum(agrweight) as agrweight,sum(agrscore) as agrscore
+from stud_asthaptype_agsco
+Where
+assessment_type='CMA' or assessment_type='TMA'
+group by code_module,code_presentation,id_student,student_name;
+
+
+create materialized view stud_ag_allscore as 
+select code_module,code_presentation,
+id_student,student_name,
+sum(agrweight) as agrweight,
+sum(agrscore) as agrscore,count(*) as cnt
+from 
+(select * 
+from stud_ag_exam
+union 
+select *
+from stud_ag_cmatma) as t1
+group by code_module,code_presentation,
+id_student,student_name;
+
+
+create materialized view stud_ag_finalscore as 
+select stud_ag_allscore.*,
+(stud_ag_allscore.agrscore/stud_ag_allscore.cnt) as finalscore
+from stud_ag_allscore;
+
+
+create materialized view stud_fs_result as 
+select stud_ag_finalscore.*,
+studentinfo.final_result
+from studentinfo,stud_ag_finalscore
+where 
+studentinfo.code_module=stud_ag_finalscore.code_module
+and studentinfo.code_presentation=stud_ag_finalscore.code_presentation
+and studentinfo.id_student=stud_ag_finalscore.id_student;
+
+
+-- give count of vle material according to the activity_type
+	
+	create materialized view vle_mat_cont as select code_module,code_presentation,activity_type,count(*) as count from vle group by code_module,code_presentation,activity_type; 
+
+create MATERIALIZED VIEW get_stud_act_day_visit as 
+select code_module,code_presentation,id_student,id_site,date,count(*) as count from studentvle group by code_module,code_presentation,id_student,id_site,date;
+
+ 
+create MATERIALIZED VIEW get_stud_day_visit as 
+select code_module,code_presentation,id_student,date,sum(count) as count from  get_stud_act_day_visit group by code_module,code_presentation,id_student,date; 
+
+
+
+create MATERIALIZED VIEW get_stud_visit as 
+select code_module,code_presentation,id_student,sum(count) as count from get_stud_day_visit group by code_module,code_presentation,id_student ;
+
+
+create MATERIALIZED VIEW get_visit as 
+select code_module,code_presentation,sum(count) as count from get_stud_visit group by code_module,code_presentation ;
+
+
+The above materialized views can be refreshed using following script:
+REFRESH MATERIALIZED VIEW  teacher_subject ;
+REFRESH MATERIALIZED VIEW  tr_sub_date ;     
+REFRESH MATERIALIZED VIEW  tr_sub_dat_stid ;
+REFRESH MATERIALIZED VIEW  tr_sub_dat_stid_stnm ;
+REFRESH MATERIALIZED VIEW  tr_sub_dat_stid_stnm_amt ;
+REFRESH MATERIALIZED VIEW  tr_sub_dat_stid_stnm_amt_stamt ;
+REFRESH MATERIALIZED VIEW  not_happen_esment ;
+REFRESH MATERIALIZED VIEW  happen_asment ;
+REFRESH MATERIALIZED VIEW  tr_sub_dat_stid_stnm_hapamt ;
+REFRESH MATERIALIZED VIEW  tr_sub_dat_stid_stnm_hapamt_stamt ;
+REFRESH MATERIALIZED VIEW  stud_wgt_hapass_score ;
+REFRESH MATERIALIZED VIEW  stud_asthaptype_agsco ;
+REFRESH MATERIALIZED VIEW  stud_ag_exam ;
+REFRESH MATERIALIZED VIEW  stud_ag_tma ;
+REFRESH MATERIALIZED VIEW  stud_ag_cma ;
+REFRESH MATERIALIZED VIEW  stud_ag_cmatma ;
+REFRESH MATERIALIZED VIEW  stud_ag_allscore ;
+REFRESH MATERIALIZED VIEW  stud_ag_finalscore ;
+REFRESH MATERIALIZED VIEW  stud_fs_result ;
+REFRESH MATERIALIZED VIEW  course_final_result ;  
+REFRESH MATERIALIZED VIEW  course_total_student ;
+
+
+6. Triggers
+   
+	6.1. To set final result widthrawn after student get unregistered
+		CREATE OR REPLACE FUNCTION aft_update_unregister()
+		  RETURNS trigger AS
+		$$
+		BEGIN
+			IF NEW.date_unregistration is not null THEN
+		       update studentinfo set final_result='Withdrawn' where code_module=OLD.code_module and code_presentation=OLD.code_presentation;
+		    END IF;
+		RETURN NEW;
+		END;
+		$$
+		LANGUAGE 'plpgsql';
+
+		CREATE TRIGGER updt_final_result
+		  AFTER UPDATE
+		  ON studentregistration
+		  FOR EACH ROW
+		  EXECUTE PROCEDURE aft_update_unregister();
+
+
+	6.2. Student cannot register after 180 days of module start time
+		CREATE FUNCTION studentregistration_check() RETURNS trigger AS $$
+		 BEGIN
+		 -- Check that studentregistration info is correct
+		 IF (NEW.date_registration IS not NULL) and (NEW.date_registration > 180) THEN
+		 RAISE EXCEPTION 'Student cannot register after 180 days of module start time';
+		 END IF;
+		 RETURN NEW;
+		 END;
+		 $$ LANGUAGE 'plpgsql';
+
+		CREATE TRIGGER studentregistration_check_tigger BEFORE INSERT OR UPDATE ON studentregistration
+		FOR EACH ROW EXECUTE PROCEDURE studentregistration_check(); 
+
+
+
+	6.3. Cut off date of exam or assessments < module presentation length
+		CREATE FUNCTION assessments_check() RETURNS trigger AS $$
+		 BEGIN
+		 -- Check that assessments info is correct
+		 IF (NEW.date > (select length from courses where code_module=OLD.code_module and code_presentation=OLD.code_presentation) ) THEN
+		 RAISE EXCEPTION 'Assessment date must be within course duration';
+		 END IF;
+		 RETURN NEW;
+		 END;
+		 $$ LANGUAGE 'plpgsql';
+
+		CREATE TRIGGER assessments_check_tigger BEFORE INSERT OR UPDATE ON assessments
+		FOR EACH ROW EXECUTE PROCEDURE assessments_check(); 
+
+
+	6.4 Initialize no_of_prev_attempt=0, final_result='Awaiting' after new insert into student info
+		CREATE OR REPLACE FUNCTION aft_insert_studentinfo()
+		  RETURNS trigger AS
+		$$
+		BEGIN
+			IF NEW.final_result is null THEN
+		       update studentinfo set final_result='Awaiting' where code_module=OLD.code_module and code_presentation=OLD.code_presentation;
+		    ELSIF NEW.no_of_prev_attempt is null THEN
+		       update studentinfo set no_of_prev_attempt=0 where code_module=OLD.code_module and code_presentation=OLD.code_presentation;
+		    END IF;   
+		RETURN NEW;
+		END;
+		$$
+		LANGUAGE 'plpgsql';
+
+		CREATE TRIGGER updt_studentinfo
+		AFTER INSERT ON studentregistration
+		  FOR EACH ROW
+		  EXECUTE PROCEDURE aft_insert_studentinfo();
+
+
+	6.5 Trigger to check login info:
+	    CREATE FUNCTION login_check() RETURNS trigger AS $$
+		 BEGIN
+		 -- Check that login_id and pwd are given
+		 IF NEW.login_id IS NULL THEN
+		 RAISE EXCEPTION 'login_id cannot be null or blank';
+		 END IF;
+		 IF NEW.password IS NULL THEN
+		 RAISE EXCEPTION 'password cannot be null or blank';
+		 END IF;
+		 IF LENGTH(NEW.password)< 5 THEN
+		 RAISE EXCEPTION 'password cannot be less than 5 characters';
+		 END IF;
+		 IF NEW.login_role not in('Admin','Student','Teacher') THEN
+		 RAISE EXCEPTION 'login_role must be Admin or Student or Teacher';
+		 END IF;
+		 RETURN NEW;
+		 END;
+		 $$ LANGUAGE 'plpgsql';
+
+		CREATE TRIGGER login_check_tigger BEFORE INSERT OR UPDATE ON login_info
+		FOR EACH ROW EXECUTE PROCEDURE login_check(); 
+
+
+
+
+7. Procedures/ UDF(User Defined Functions)
+	7.1. getTeacherSubjects(teacherid):return list of (subjects_id,subject_name)
+
+	create or replace function get_teacher_subjects(integer) returns 
+ 	table(subjectid varchar,
+ 		subjectname varchar)
+ 	as $$
+ 	begin
+ 	return query
+ 	select distinct(code_module),subject_name from teacher_course where id_teacher=$1 order by code_module;
+ 	end;$$ language 'plpgsql';
+
+
+    7.2. getSubjectTeachers(subjectCode): returns list (teacher_id,teacher_name)
+
+	create or replace function get_subject_teachers(varchar) returns 
+ 	table(teacherid integer,
+ 		teachername varchar)
+ 	as $$
+ 	begin
+ 	return query
+ 	select tc.id_teacher, t.name 
+   from teacher t, teacher_course tc 
+   where tc.id_teacher=t.id_teacher and code_module=$1 
+   order by tc.id_teacher;
+ 	end;$$ language 'plpgsql';
+
+
+    7.3. getMaxEnroll(code_presentation): returns list(code_module,subject_name,subject_teacher, max_enroll_num)
+
+	create or replace function getMaxEnroll(varchar) returns 
+	 table(codemodule varchar,subjectname varchar,totalstudent bigint)
+	 as $$ 
+	 begin
+	 return query
+	 select cts.code_module,subject_name,total_student from course_total_student cts,subject_name s
+	where code_presentation=$1
+	and total_student=(select max(total_student) 
+	from course_total_student where code_presentation=$1)
+	and cts.code_module=s.code_module;
+	end;$$ language 'plpgsql' ;
+
+    7.4. getMinEnroll(code_presentation): returns list(code_module,subject_name,subject_teacher, max_enroll_num)
+
+	create or replace function getMinEnroll(varchar) returns 
+	 table(codemodule varchar,subjectname varchar,totalstudent bigint)
+	 as $$ 
+	 begin
+	 return query
+	 select cts.code_module,subject_name,total_student from course_total_student cts,subject_name s
+	where code_presentation=$1
+	and total_student=(select min(total_student) 
+	from course_total_student where code_presentation=$1)
+	and cts.code_module=s.code_module;
+	end;$$ language 'plpgsql' ;
+
+
+     7.5. getResultWiseStudentCount(code_module,code_presentation): returns list of(final_result,total_student)
+
+	create or replace function getResultWiseStudentCount(varchar,varchar) returns table(resulttype varchar,count bigint) as $$
+	begin
+	return query
+	select final_result,total_student 
+	from course_final_result where code_module=$1 and code_presentation=$2;
+	end;$$ language 'plpgsql';
+
+
+
+     7.6. getDurationOfCourseModule(code_module,code_presentation): returns noOfDays
+
+	create or replace function getDurationOfCourseModule(varchar, varchar) returns integer
+	as $$ 
+	begin
+	return 
+	(select length from courses where code_module=$1 and code_presentation=$2);
+	end;$$ language 'plpgsql' ;
+
+
+
+     7.7. getMaxDurationCourseModule(code_presentation): returns tcode_module,subjectname,length
+
+	create or replace function getMaxDurationCourseModule(varchar) returns table(codemodule varchar, subjectname varchar,duration integer) as $$
+	begin
+	return query
+	select cts.code_module,subject_name,length from courses cts,subject_name s
+	where code_presentation=$1
+	and length=(select max(length) 
+	from courses where code_presentation=$1)
+	and cts.code_module=s.code_module;
+	end; $$ language 'plpgsql';
+
+
+     7.8. getNoOfAssessmentInCourse(code_module,code_presentation): returns list of(assessment_type,noOfAssessment)
+
+	create or replace function getNoOfAssessmentInCourse(varchar,varchar) returns table(assesstype varchar, count bigint) as $$
+	begin
+	return query
+	select assessment_type, count(assessment_type) as count from assessments 
+	 where code_module=$1 and code_presentation=$2
+	group by assessment_type;
+	end; $$ language 'plpgsql';
+
+
+
+     7.9. getWeightageInfoOfAssessmentInCourse(code_module,code_presentation,assessment_type): return assessID,weightage) 
+
+	create or replace function getWeightageInfoOfAssessmentInCourse(varchar,varchar,varchar) returns table(assessid integer, weightage float) as $$
+	begin
+	return query
+	select id_assessment, weight from assessments 
+	 where code_module=$1 and code_presentation=$2 and assessment_type=$3;
+	end; $$ language 'plpgsql';
+
+
+     7.10. getWeightageInfoOfAssessmentInCourse(code_module,code_presentation): return assessID,assessment_type,weightage
+
+	create or replace function getWeightageInfoOfAssessmentInCourse(varchar,varchar) returns table(assessid integer, assesstype varchar, weightage float) as $$
+	begin
+	return query
+	select id_assessment, assessment_type, weight from assessments 
+	 where code_module=$1 and code_presentation=$2 ;
+	end; $$ language 'plpgsql';
+
+
+
+     7.11. getCourseVLEType(code_module,code_presentation): return list of(id_site,activity_type )
+
+	create or replace function getCourseVLEType(varchar,varchar) returns table(siteid integer, activitytype varchar) as $$
+	begin
+	return query
+	select id_site,activity_type from vle 
+	 where code_module=$1 and code_presentation=$2 ;
+	end; $$ language 'plpgsql';
+
+
+
+     7.12. getNoOfCourseVLETypeWise(code_module,code_presentation): return list of(activity_type, count)
+
+	create or replace function getNoOfCourseVLETypeWise(varchar,varchar) returns table(activitytype varchar,count bigint) as $$
+	begin
+	return query
+	select activity_type,count(id_site) as count from vle 
+	 where code_module=$1 and code_presentation=$2 
+	 group by activity_type;
+	end; $$ language 'plpgsql';
+
+
+
+     7.13. getStudentGenderCount(code_module,code_presentation): return list of(gender, count)
+
+create or replace function getStudentGenderCount(varchar,varchar) returns table(gendertype varchar,count bigint) as $$
+begin
+return query
+select gender,count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 
+ group by gender;
+end; $$ language 'plpgsql';
+
+
+
+     7.14. getNoOfStudentRegionWise(code_module,code_presentation): return list of(region, count)
+
+create or replace function getNoOfStudentRegionWise(varchar,varchar) returns table(regionname varchar,count bigint) as $$
+begin
+return query
+select region,count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 
+ group by region;
+end; $$ language 'plpgsql';
+
+
+
+     7.15. getNoOfStudentRegionWise(code_module,code_presentation,region): return count
+
+create or replace function getNoOfStudentRegionWise(varchar,varchar,varchar) returns bigint as $$
+begin
+return (select count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 and region=$3);
+end; $$ language 'plpgsql';
+
+
+     7.16. getNoOfStudentHtEducationWise(code_module,code_presentation): return list of(highest_education, count)
+
+create or replace function getNoOfStudentHtEducationWise(varchar,varchar) returns table(highesteducation varchar,count bigint) as $$
+begin
+return query
+select highest_education,count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 
+ group by highest_education;
+end; $$ language 'plpgsql';
+
+
+     7.17. getNoOfStudentHtEducationWise(code_module,code_presentation,highest_education): return count
+
+create or replace function getNoOfStudentHtEducationWise(varchar,varchar,varchar) returns bigint as $$
+begin
+return (select count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 and highest_education=$3);
+end; $$ language 'plpgsql';
+
+
+     7.18. getNoOfStudentIMDBandWise(code_module,code_presentation): return list of(imd_band, count)
+
+create or replace function getNoOfStudentIMDBandWise(varchar,varchar) returns table(imdband varchar,count bigint) as $$
+begin
+return query
+select imd_band,count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 
+ group by imd_band;
+end; $$ language 'plpgsql';
+
+
+     7.19. getNoOfStudentIMDBandWise(code_module,code_presentation,imd_band): return count
+
+create or replace function getNoOfStudentIMDBandWise(varchar,varchar,varchar) returns bigint as $$
+begin
+return (select count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 and imd_band=$3);
+end; $$ language 'plpgsql';
+
+
+     7.20. getNoOfStudentAgeBandWise(code_module,code_presentation): return list of(age_band, count)
+
+create or replace function getNoOfStudentAgeBandWise(varchar,varchar) returns table(ageband varchar,count bigint) as $$
+begin
+return query
+select age_band,count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 
+ group by age_band;
+end; $$ language 'plpgsql';
+
+
+	7.21. getNoOfStudentAgeBandWise(code_module,code_presentation,age_band): return count
+
+create or replace function getNoOfStudentAgeBandWise(varchar,varchar,varchar) returns bigint as $$
+begin
+return (select count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 and age_band=$3);
+end; $$ language 'plpgsql';
+
+
+
+    7.22. getNoOfStudentDisabled(code_module,code_presentation): return count
+
+create or replace function getNoOfStudentDisabled(varchar,varchar) returns bigint as $$
+begin
+return (select count(*) as count from studentinfo 
+ where code_module=$1 and code_presentation=$2 and disability='Y');
+end; $$ language 'plpgsql';
+
+
+
+    7.23. getNoOfStudentRegisteredBeforeCourseStart(code_module,code_presentation): return count
+
+create or replace function getNoOfStudentRegisteredBeforeCourseStart(varchar,varchar) returns bigint as $$
+begin
+return (select count(*) as count from studentregistration 
+ where code_module=$1 and code_presentation=$2 and date_registration<0);
+end; $$ language 'plpgsql';
+
+
+
+    7.24. getNoOfStudentRegisteredAfterCourseStart(code_module,code_presentation): return count
+
+	create or replace function getNoOfStudentRegisteredAfterCourseStart(varchar,varchar) returns bigint as $$
+	begin
+	return (select count(*) as count from studentregistration 
+	 where code_module=$1 and code_presentation=$2 and date_registration>=0);
+	end; $$ language 'plpgsql';
+
+
+
+    7.25. getNoOfStudentWithdrawnCourse(code_module,code_presentation): return count
+
+	create or replace function getNoOfStudentWithdrawnCourse(varchar,varchar) returns bigint as $$
+	begin
+	return (select count(*) as count from studentregistration 
+	 where code_module=$1 and code_presentation=$2 and date_unregistration is not null);
+	end; $$ language 'plpgsql';
+
+
+    7.26. 
+    create or replace function get_course_strength(varchar,varchar) returns integer as $$
+	declare result integer;
+	 begin
+	  select into result (total_student) from course_total_student where code_module=$1 and code_presentation=$2;
+	  return result;
+	 end;
+	 $$ language 'plpgsql';
+  
+    7.27.
+    create or replace function get_course_final_result(varchar,varchar) returns table( finalresult varchar,totalcnt integer) as $$
+ 	begin 
+ 	return query
+ 	select final_result,(total_student)::int from  course_final_result where code_module=$1 and code_presentation=$2;
+ 	end; $$ language 'plpgsql';
+
+
+    7.28.
+    create or replace function get_course_student(varchar,varchar) returns 
+ 	table(studentid integer,
+ 		studentname varchar,
+ 		result varchar)
+ 	as $$
+ 	begin
+ 	return query
+ 	select id_student,student_name,final_result from tr_sub_dat_stid_stnm where code_module=$1 and code_presentation=$2 order by final_result;
+ 	end;$$ language 'plpgsql';
+
+
+	7.29. getPercentageOfStudentResultWise(): return list(result_type,percent)
+
+	create or replace function getPercentageOfStudentResultWise() returns table(resulttype varchar, studentpercent numeric) as $$
+	begin
+	return query
+	select s.final_result, round(CAST(count*100::NUMERIC/totalstudent AS NUMERIC), 4) as studentpercent from 
+	(select final_result,count(*) as count,(select count(*) from studentinfo) as totalstudent from studentinfo
+	group by final_result) s;
+	end; $$ language 'plpgsql';
+
+
+	7.30. getPercentageOfStudentResultWise(code_module,code_presentation): return list(result_type,percent)
+
+	create or replace function getPercentageOfStudentResultWise(varchar,varchar) returns table(resulttype varchar, studentpercent numeric) as $$
+	begin
+	return query
+	select s.final_result, round(CAST(count*100::NUMERIC/totalstudent AS NUMERIC), 4) as studentpercent from 
+	(select final_result,count(*) as count,(select count(*) from studentinfo where code_module=$1 and code_presentation=$2) as totalstudent from studentinfo
+	where code_module=$1 and code_presentation=$2
+	group by final_result) s ;
+	end; $$ language 'plpgsql';
+
+
+
+	7.31. getTeacherWhoIsNotTeachingAnyCourse(code_presentation): returns list of(id_teacher, name)
+
+	create or replace function getTeachersWhoIsNotTeachingAnyCourse(varchar) returns table(id integer, name varchar) as $$
+	begin
+	return query
+	select t.id_teacher,t.name from teacher t,teacher_course tc where t.id_teacher=tc.id_teacher and t.id_teacher not in (select id_teacher from teacher_course) and tc.code_presentation=$1;
+	end; $$ language 'plpgsql';
+
+
+
+
+	7.32. getTeacherAndCourseCount(code_presentation):returns list of(id_teacher, name, coursecount)
+
+	create or replace function getTeacherAndCourseCount(varchar) returns table(id integer, name varchar, count bigint) as $$
+	begin
+	return query
+	select t.id_teacher,t.name,count(code_module) from teacher t,teacher_course tc 
+	where t.id_teacher=tc.id_teacher and tc.code_presentation=$1
+	group by t.id_teacher ;
+	end; $$ language 'plpgsql';
+
+
+
+
+	7.33. ---  function for failed student - list --
+
+	create or replace function fail_stud_codewise(code_module varchar,code_presentation varchar,cnt integer) returns
+		table(id_student integer,
+			  student_name varchar,
+			  finalscore numeric)
+		as $$
+		begin 
+		return query
+	select stud_fs_result.id_student,stud_fs_result.student_name,stud_fs_result.finalscore
+	from stud_fs_result
+	where stud_fs_result.final_result='Fail'
+	and stud_fs_result.finalscore is not NULL
+	and stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2
+	and stud_fs_result.finalscore < 40.00
+	order by stud_fs_result.finalscore asc
+	limit $3;
+	end;$$ language 'plpgsql';
+
+	7.34---- ---  function for failed student - COUNT --
+	create or replace function fail_stud_cnt_codewise(code_module varchar,code_presentation varchar) returns integer
+		as $$
+		declare result integer;
+		begin 
+	select into result (count(*))
+	from stud_fs_result
+	where stud_fs_result.final_result='Fail'
+	and stud_fs_result.finalscore is not NULL
+	and stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2
+	and stud_fs_result.finalscore < 40.00;
+	return result;
+
+	end;$$ language 'plpgsql';
+
+
+
+
+	7.35---- function for get topper student ---------- LIST ------------
+
+	create or replace function top_stud_codwise(code_module varchar,code_presentation varchar,cnt integer) returns 
+		table(id_student integer,
+			student_name varchar,
+			finalscore numeric)
+		as $$
+		begin
+		return query
+		select stud_fs_result.id_student,stud_fs_result.student_name,
+		stud_fs_result.finalscore
+		from stud_fs_result
+		where (stud_fs_result.final_result='Pass' 
+		or stud_fs_result.final_result='Distinction')
+		and stud_fs_result.finalscore is not NULL
+		and stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore >=40.00
+		order by stud_fs_result.finalscore desc
+		limit $3;
+	end;$$ language 'plpgsql';
+
+	7.36---- function for get student ------- greater  --   list ----------
+	create or replace function great_stud_codwise(code_module varchar,code_presentation varchar,score numeric) returns
+		table(id_student integer,
+			student_name varchar,
+			finalscore numeric)
+		as $$
+		begin 
+		return query 
+		select stud_fs_result.id_student,stud_fs_result.student_name,
+		stud_fs_result.finalscore
+		from stud_fs_result
+		where stud_fs_result.finalscore >= $3
+		and stud_fs_result.code_module=$1
+		and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore is not NULL
+		order by stud_fs_result.finalscore desc;
+	end;$$ language 'plpgsql';	
+
+
+	7.37 ---- function for student ---------- greater  --   count ----------
+	create or replace function great_stud_cnt_codwise(code_module varchar,code_presentation varchar,score numeric) returns integer
+		as $$
+		declare result integer;
+	  begin
+	  select into result (count(*))
+	  from stud_fs_result
+	  where  stud_fs_result.finalscore >= $3
+		and stud_fs_result.code_module=$1
+		and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore is not NULL;
+		return result;
+	end;$$ language 'plpgsql';	
+
+
+	7.38---- function for get  student ----------lower ----    LIST -----
+	create or replace function lower_stud_codwise(code_module varchar,code_presentation varchar,score numeric) returns
+		table(id_student integer,
+			student_name varchar,
+			finalscore numeric)
+		as $$
+		begin 
+		return query 
+		select stud_fs_result.id_student,stud_fs_result.student_name,
+		stud_fs_result.finalscore
+		from stud_fs_result
+		where stud_fs_result.finalscore <= $3
+		and stud_fs_result.code_module=$1
+		and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore is not NULL
+		order by stud_fs_result.finalscore desc;
+	end;$$ language 'plpgsql';	
+
+
+	7.39 ---- function for get  student ----------lower ---------    count  ------------
+	create or replace function lower_stud_cnt_codwise(code_module varchar,code_presentation varchar,score numeric) returns integer
+		as $$
+		declare result integer;
+	  begin
+	  select into result (count(*))
+	  from stud_fs_result
+	  where  stud_fs_result.finalscore <= $3
+		and stud_fs_result.code_module=$1
+		and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore is not NULL;
+		return result;
+	end;$$ language 'plpgsql';	
+
+
+	7.40---- function for get  student ----------in range between two values ---------    LIST ------------
+	create or replace function range_stud_codwise(code_module varchar,code_presentation varchar,score1 numeric,score2 numeric) returns
+		table(id_student integer,
+			student_name varchar,
+			finalscore numeric)
+		as $$
+		begin 
+		return query 
+		select stud_fs_result.id_student,stud_fs_result.student_name,
+		stud_fs_result.finalscore
+		from stud_fs_result
+		where ((stud_fs_result.finalscore >= $3 and stud_fs_result.finalscore <= $4)
+		or (stud_fs_result.finalscore >= $4 and stud_fs_result.finalscore <= $3))
+		and stud_fs_result.code_module=$1
+		and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore is not NULL
+		order by stud_fs_result.finalscore desc;
+	end;$$ language 'plpgsql';	
+
+
+	7.41 ---- function for get  student ----------in range between two values ---------    count  ------------
+	create or replace function range_stud_cnt_codwise(code_module varchar,code_presentation varchar,score1 numeric,score2 numeric) returns integer
+		as $$
+		declare result integer;
+		begin 
+		select into result (count(*))
+		from stud_fs_result
+		where ((stud_fs_result.finalscore >= $3 and stud_fs_result.finalscore <= $4)
+		or (stud_fs_result.finalscore >= $4 and stud_fs_result.finalscore <= $3))
+		and stud_fs_result.code_module=$1
+		and stud_fs_result.code_presentation=$2
+		and stud_fs_result.finalscore is not NULL;
+		return result;
+	end;$$ language 'plpgsql';	
+
+
+	7.42 ----- function for get average, minimum , maximum for course -------
+	create or replace function get_course_desval(code_module varchar,code_presentation varchar,desval varchar) returns numeric
+		as $$
+		declare result numeric;
+		begin
+		if $3 = 'Average' 
+		  then select into result (avg(stud_fs_result.finalscore)::numeric) from stud_fs_result
+		       where stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Minimum' 
+		  then select into result (min(stud_fs_result.finalscore)::numeric) from stud_fs_result
+		       where stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2;
+		       	return result;
+		else  select into result (max(stud_fs_result.finalscore)::numeric) from stud_fs_result
+		      where stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2;
+		      	return result;
+		end if;
+	end;$$ language 'plpgsql';	
+
+
+	7.43 ------ function for sumary for course  - average,minimum,maximum  -------
+	create or replace function get_course_studperfor(code_module varchar,code_presentation varchar) returns 
+		table(Criteria text,
+			  value numeric)
+		as $$
+		begin
+		return query
+		select 'Average' as Criteria,(avg(stud_fs_result.finalscore)::numeric) from stud_fs_result
+		where stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2
+		union
+		select 'Minimum' as Criteria,(min(stud_fs_result.finalscore)::numeric) from stud_fs_result
+		where stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2
+		union
+		select 'Maximum' as Criteria,(max(stud_fs_result.finalscore)::numeric) from stud_fs_result
+		where stud_fs_result.code_module=$1 and stud_fs_result.code_presentation=$2;
+	end;$$ language 'plpgsql';	
+
+
+
+
+
+	7.44------ funct TO KNOW COURSE HAS WHAT TYPE OF EXAM WITH THEIR WEIGHTAGE-----------------------------------
+
+	create or replace function get_course_amt_wgt_type(code_module varchar,code_presentation varchar) returns 
+		table(assessment_type varchar,
+			agrweight numeric)
+		as $$
+		begin 
+		return query
+		select stud_asthaptype_agsco.assessment_type,stud_asthaptype_agsco.agrweight from stud_asthaptype_agsco
+	 where stud_asthaptype_agsco.code_module='FFF' and stud_asthaptype_agsco.code_presentation='2013J' 
+	 GROUP BY stud_asthaptype_agsco.assessment_type,stud_asthaptype_agsco.agrweight;
+
+	end;$$ language 'plpgsql';	
+
+	7.45----- funct TO KNOW COURSE - TOP STUDENT FOR PARTICULAR ASSESSMENT TYPE BY AGGRECATE SCORE  -----------------------------------
+
+	create or replace function get_top_course_agr_asstype(code_module varchar,code_presentation varchar,assessment_type varchar,cnt integer) returns
+		table(id_student integer,
+			student_name varchar,
+			agrscore numeric)
+		as $$
+		-- declare aks='';
+		begin
+		-- return query
+		if $3='TMA' 
+		  then return query select stud_ag_tma.id_student,stud_ag_tma.student_name,stud_ag_tma.agrscore from stud_ag_tma
+		  where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2 AND stud_ag_tma.agrscore IS NOT NULL
+		  order by stud_ag_tma.agrscore desc
+		  limit $4;
+		elsif $3='CMA'
+		  then return query select stud_ag_cma.id_student,stud_ag_cma.student_name,stud_ag_cma.agrscore from stud_ag_cma
+		  where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2 AND stud_ag_cma.agrscore IS NOT NULL
+		  order by stud_ag_cma.agrscore desc
+		  limit $4;
+		elsif $3='Exam'
+	      then return query select stud_ag_exam.id_student,stud_ag_exam.student_name,stud_ag_exam.agrscore from stud_ag_exam
+		  where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2 AND stud_ag_exam.agrscore IS NOT NULL
+		  order by stud_ag_exam.agrscore desc
+		  limit $4;
+		elsif $3='CMA-TMA'
+		  then return query select stud_ag_cmatma.id_student,stud_ag_cmatma.student_name,stud_ag_cmatma.agrscore from stud_ag_cmatma
+		  where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2 AND stud_ag_cmatma.agrscore IS NOT NULL
+		  order by stud_ag_cmatma.agrscore desc
+		  limit $4;
+		elsif $3='Total' 
+		  then return query select stud_ag_finalscore.id_student,stud_ag_finalscore.student_name,stud_ag_finalscore.finalscore from stud_ag_finalscore
+		  where stud_ag_finalscore.code_module=$1 and stud_ag_finalscore.code_presentation=$2 AND stud_ag_finalscore IS NOT NULL
+		  order by stud_ag_finalscore.finalscore desc
+		  limit $4 ;
+		else RAISE EXCEPTION 'incorrect input';
+	end if;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.46----- funct TO KNOW COURSE - LOW STUDENT FOR PARTICULAR ASSESSMENT TYPE BY AGGRECATE SCORE  -----------------------------------
+
+	create or replace function get_low_course_agr_asstype(code_module varchar,code_presentation varchar,assessment_type varchar,cnt integer) returns
+		table(id_student integer,
+			student_name varchar,
+			agrscore numeric)
+		as $$
+		-- declare aks='';
+		begin
+		-- return query
+		if $3='TMA' 
+		  then return query select stud_ag_tma.id_student,stud_ag_tma.student_name,stud_ag_tma.agrscore from stud_ag_tma
+		  where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2 AND stud_ag_tma.agrscore IS NOT NULL
+		  order by stud_ag_tma.agrscore asc
+		  limit $4;
+		elsif $3='CMA'
+		  then return query select stud_ag_cma.id_student,stud_ag_cma.student_name,stud_ag_cma.agrscore from stud_ag_cma
+		  where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2 AND stud_ag_cma.agrscore IS NOT NULL
+		  order by stud_ag_cma.agrscore asc
+		  limit $4;
+		elsif $3='Exam'
+	      then return query select stud_ag_exam.id_student,stud_ag_exam.student_name,stud_ag_exam.agrscore from stud_ag_exam
+		  where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2 AND stud_ag_exam.agrscore IS NOT NULL
+		  order by stud_ag_exam.agrscore asc
+		  limit $4;
+		elsif $3='CMA-TMA'
+		  then return query select stud_ag_cmatma.id_student,stud_ag_cmatma.student_name,stud_ag_cmatma.agrscore from stud_ag_cmatma
+		  where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2 AND stud_ag_cmatma.agrscore IS NOT NULL
+		  order by stud_ag_cmatma.agrscore asc
+		  limit $4;
+		elsif $3='Total' 
+		  then return query select stud_ag_finalscore.id_student,stud_ag_finalscore.student_name,stud_ag_finalscore.finalscore from stud_ag_finalscore
+		  where stud_ag_finalscore.code_module=$1 and stud_ag_finalscore.code_presentation=$2 AND stud_ag_finalscore IS NOT NULL
+		  order by stud_ag_finalscore.finalscore asc
+		  limit $4 ;
+		else RAISE EXCEPTION 'incorrect input';
+	end if;
+	end;$$ language 'plpgsql';	
+
+
+	7.47-------- function for get average, minimum , maximum for course - assessmenttype-exam   --------------------------- Working
+
+	create or replace function get_course_exam_desval(code_module varchar,code_presentation varchar,desval varchar) returns numeric
+		as $$
+		declare result numeric;
+		begin
+		if $3 = 'Average' 
+		  then select into result (avg(stud_ag_exam.agrscore)::numeric) from stud_ag_exam
+		       where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Minimum' 
+		  then select into result (min(stud_ag_exam.agrscore)::numeric) from stud_ag_exam
+		       where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Maximum' 
+		 then select into result (max(stud_ag_exam.agrscore)::numeric) from stud_ag_exam
+		      where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2;
+		      	return result;
+		else RAISE EXCEPTION 'incorrect input';  	
+		end if;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.48----- function for get average, minimum , maximum for course - assessmenttype-tma   ---------------------------
+
+	create or replace function get_course_tma_desval(code_module varchar,code_presentation varchar,desval varchar) returns numeric
+		as $$
+		declare result numeric;
+		begin
+		if $3 = 'Average' 
+		  then select into result (avg(stud_ag_tma.agrscore)::numeric) from stud_ag_tma
+		       where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Minimum' 
+		  then select into result (min(stud_ag_tma.agrscore)::numeric) from stud_ag_tma
+		       where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Maximum' 
+		 then select into result (max(stud_ag_tma.agrscore)::numeric) from stud_ag_tma
+		      where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2;
+		      	return result;
+		else RAISE EXCEPTION 'incorrect input';  	
+		end if;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.49------ function for get average, minimum , maximum for course - assessmenttype-cma ---------------------------
+
+	create or replace function get_course_cma_desval(code_module varchar,code_presentation varchar,desval varchar) returns numeric
+		as $$
+		declare result numeric;
+		begin
+		if $3 = 'Average' 
+		  then select into result (avg(stud_ag_cma.agrscore)::numeric) from stud_ag_cma
+		       where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Minimum' 
+		  then select into result (min(stud_ag_cma.agrscore)::numeric) from stud_ag_cma
+		       where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Maximum' 
+		 then select into result (max(stud_ag_cma.agrscore)::numeric) from stud_ag_cma
+		      where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2;
+		      	return result;
+		else RAISE EXCEPTION 'incorrect input';  	
+		end if;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.50--------- function for get average, minimum , maximum for course - assessmenttype- cma+tma ---------------------------
+
+	create or replace function get_course_cmatma_desval(code_module varchar,code_presentation varchar,desval varchar) returns numeric
+		as $$
+		declare result numeric;
+		begin
+		if $3 = 'Average' 
+		  then select into result (avg(stud_ag_cmatma.agrscore)::numeric) from stud_ag_cmatma
+		       where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Minimum' 
+		  then select into result (min(stud_ag_cmatma.agrscore)::numeric) from stud_ag_cmatma
+		       where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2;
+		       	return result;
+		elsif $3 = 'Maximum' 
+		 then select into result (max(stud_ag_cmatma.agrscore)::numeric) from stud_ag_cmatma
+		      where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2;
+		      	return result;
+		else RAISE EXCEPTION 'incorrect input';  	
+		end if;
+	end;$$ language 'plpgsql';	
+
+
+	7.51-------- function for sumary for course  - average,minimum,maximum  -- EXAM  --------------------
+
+	create or replace function get_course_exam_studperfor(code_module varchar,code_presentation varchar) returns 
+		table(Criteria text,
+			  value numeric)
+		as $$
+		begin
+		return query
+		select 'Average' as Criteria,(avg(stud_ag_exam.agrscore)::numeric) from stud_ag_exam
+		where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2
+		union
+		select 'Minimum' as Criteria,(min(stud_ag_exam.agrscore)::numeric) from stud_ag_exam
+		where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2
+		union
+		select 'Maximum' as Criteria,(max(stud_ag_exam.agrscore)::numeric) from stud_ag_exam
+		where stud_ag_exam.code_module=$1 and stud_ag_exam.code_presentation=$2;
+	end;$$ language 'plpgsql';	
+
+
+	7.52------ function for sumary for course  - average,minimum,maximum  -- tma  --------------------
+
+	create or replace function get_course_tma_studperfor(code_module varchar,code_presentation varchar) returns 
+		table(Criteria text,
+			  value numeric)
+		as $$
+		begin
+		return query
+		select 'Average' as Criteria,(avg(stud_ag_tma.agrscore)::numeric) from stud_ag_tma
+		where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2
+		union
+		select 'Minimum' as Criteria,(min(stud_ag_tma.agrscore)::numeric) from stud_ag_tma
+		where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2
+		union
+		select 'Maximum' as Criteria,(max(stud_ag_tma.agrscore)::numeric) from stud_ag_tma
+		where stud_ag_tma.code_module=$1 and stud_ag_tma.code_presentation=$2;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.53------ function for sumary for course  - average,minimum,maximum  -- cma  --------------------
+
+	create or replace function get_course_cma_studperfor(code_module varchar,code_presentation varchar) returns 
+		table(Criteria text,
+			  value numeric)
+		as $$
+		begin
+		return query
+		select 'Average' as Criteria,(avg(stud_ag_cma.agrscore)::numeric) from stud_ag_cma
+		where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2
+		union
+		select 'Minimum' as Criteria,(min(stud_ag_cma.agrscore)::numeric) from stud_ag_cma
+		where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2
+		union
+		select 'Maximum' as Criteria,(max(stud_ag_cma.agrscore)::numeric) from stud_ag_cma
+		where stud_ag_cma.code_module=$1 and stud_ag_cma.code_presentation=$2;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.54--------- function for sumary for course  - average,minimum,maximum  -- cma+TMA  --------------------
+
+	create or replace function get_course_cmatma_studperfor(code_module varchar,code_presentation varchar) returns 
+		table(Criteria text,
+			  value numeric)
+		as $$
+		begin
+		return query
+		select 'Average' as Criteria,(avg(stud_ag_cmatma.agrscore)::numeric) from stud_ag_cmatma
+		where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2
+		union
+		select 'Minimum' as Criteria,(min(stud_ag_cmatma.agrscore)::numeric) from stud_ag_cmatma
+		where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2
+		union
+		select 'Maximum' as Criteria,(max(stud_ag_cmatma.agrscore)::numeric) from stud_ag_cmatma
+		where stud_ag_cmatma.code_module=$1 and stud_ag_cmatma.code_presentation=$2;
+	end;$$ language 'plpgsql';	
+
+
+	7.55-------- function for comparing two courses - gender ------------------------------------------
+
+	create or replace function comp_course_gender(code_module1 varchar,code_presentation1 varchar,gender1 varchar,
+		                                         code_module2 varchar,code_presentation2 varchar,gender2 varchar)
+	returns VARCHAR as $$
+	declare result1 integer;
+	declare result2 integer;
+	begin 
+	select into result1 (count(*)) from studentinfo where code_module=$1 and code_presentation=$2 and gender=$3;
+	select into result2 (count(*)) from studentinfo where code_module=$4 and code_presentation=$5 and gender=$6;
+
+	if result1 > result2
+	then return concat($1,' ',$2,' ',$3,' ',result1::varchar,' ',(result1-result2)::varchar);
+	else
+	return concat($4,' ',$5,' ',$6,' ',result2::varchar,' ',(result2-result1)::varchar);
+	end if;
+	end; $$ language 'plpgsql';	
+
+
+	7.56------- function for comparing two courses - REGION ------------------------------------------
+
+	create or replace function comp_course_region(code_module1 varchar,code_presentation1 varchar,region1 varchar,
+		                                         code_module2 varchar,code_presentation2 varchar,region2 varchar)
+	returns VARCHAR as $$
+	declare result1 integer;
+	declare result2 integer;
+	begin 
+	select into result1 (count(*)) from studentinfo where code_module=$1 and code_presentation=$2 and region=$3;
+	select into result2 (count(*)) from studentinfo where code_module=$4 and code_presentation=$5 and region=$6;
+
+	if result1 > result2
+	then return concat($1,' ',$2,' ',$3,' ',result1::varchar,' ',(result1-result2)::varchar);
+	else
+	return concat($4,' ',$5,' ',$6,' ',result2::varchar,' ',(result2-result1)::varchar);
+	end if;
+	end; $$ language 'plpgsql';	
+
+
+	7.57-------- function for comparing two courses - high education ------------------------------------------
+
+	create or replace function comp_course_highest_education(code_module1 varchar,code_presentation1 varchar,highest_education1 varchar,
+		                                         code_module2 varchar,code_presentation2 varchar,highest_education2 varchar)
+	returns VARCHAR as $$
+	declare result1 integer;
+	declare result2 integer;
+	begin 
+	select into result1 (count(*)) from studentinfo where code_module=$1 and code_presentation=$2 and highest_education=$3;
+	select into result2 (count(*)) from studentinfo where code_module=$4 and code_presentation=$5 and highest_education=$6;
+
+	if result1 > result2
+	then return concat($1,' ',$2,' ',$3,' ',result1::varchar,' ',(result1-result2)::varchar);
+	else
+	return concat($4,' ',$5,' ',$6,' ',result2::varchar,' ',(result2-result1)::varchar);
+	end if;
+	end; $$ language 'plpgsql';	
+
+
+
+	7.58------ function for comparing two courses - imd_band ------------------------------------------
+
+	create or replace function comp_course_imd_band(code_module1 varchar,code_presentation1 varchar,imd_band1 varchar,
+		                                         code_module2 varchar,code_presentation2 varchar,imd_band2 varchar)
+	returns VARCHAR as $$
+	declare result1 integer;
+	declare result2 integer;
+	begin 
+	select into result1 (count(*)) from studentinfo where code_module=$1 and code_presentation=$2 and imd_band=$3;
+	select into result2 (count(*)) from studentinfo where code_module=$4 and code_presentation=$5 and imd_band=$6;
+
+	if result1 > result2
+	then return concat($1,' ',$2,' ',$3,' ',result1::varchar,' ',(result1-result2)::varchar);
+	else
+	return concat($4,' ',$5,' ',$6,' ',result2::varchar,' ',(result2-result1)::varchar);
+	end if;
+	end; $$ language 'plpgsql';	
+
+
+	7.59------- function for comparing two courses - age_band ------------------------------------------
+
+	create or replace function comp_course_age_band(code_module1 varchar,code_presentation1 varchar,age_band1 varchar,
+		                                         code_module2 varchar,code_presentation2 varchar,age_band2 varchar)
+	returns VARCHAR as $$
+	declare result1 integer;
+	declare result2 integer;
+	begin 
+	select into result1 (count(*)) from studentinfo where code_module=$1 and code_presentation=$2 and age_band=$3;
+	select into result2 (count(*)) from studentinfo where code_module=$4 and code_presentation=$5 and age_band=$6;
+
+	if result1 > result2
+	then return concat($1,' ',$2,' ',$3,' ',result1::varchar,' ',(result1-result2)::varchar);
+	else
+	return concat($4,' ',$5,' ',$6,' ',result2::varchar,' ',(result2-result1)::varchar);
+	end if;
+	end; $$ language 'plpgsql';	
+
+
+	7.60---------- function for comparing two courses - DISBILITY  ------------------------------------------
+
+	create or replace function comp_course_disability(code_module1 varchar,code_presentation1 varchar,disability1 varchar,
+		                                         code_module2 varchar,code_presentation2 varchar,disability2 varchar)
+	returns VARCHAR as $$
+	declare result1 integer;
+	declare result2 integer;
+	begin 
+	select into result1 (count(*)) from studentinfo where code_module=$1 and code_presentation=$2 and disability=$3;
+	select into result2 (count(*)) from studentinfo where code_module=$4 and code_presentation=$5 and disability=$6;
+
+	if result1 > result2
+	then return concat($1,' ',$2,' ',$3,' ',result1::varchar,' ',(result1-result2)::varchar);
+	else
+	return concat($4,' ',$5,' ',$6,' ',result2::varchar,' ',(result2-result1)::varchar);
+	end if;
+	end; $$ language 'plpgsql';	
+
+
+	7.61.
+	 create or replace function assign_grade() returns void 
+	 	as
+	 	$$
+	 	declare studlist integer[]= (select array_agg(id_student::integer) from stud_fs_result);
+	 	declare cmodlist varchar[] = (select array_agg(code_module::varchar(45)) from stud_fs_result);
+	 	declare cpreslist varchar[] = (select array_agg(code_presentation::varchar(45)) from stud_fs_result);
+	 	declare length int = array_length(studlist,1);
+	 	declare i int=1;
+	 	declare studname varchar(45);
+	 	declare aweight numeric;
+	 	declare fscore numeric;
+	 	declare fresult varchar(45);
+	 	begin
+	 	loop
+	 	exit when length=i+1;
+	 	  studname = (select student_name from stud_fs_result where code_module=cmodlist[i] and code_presentation=cpreslist[i] and id_student=studlist[i]);
+	 	  aweight = (select agrweight  from stud_fs_result where code_module=cmodlist[i] and code_presentation=cpreslist[i] and id_student=studlist[i]);
+	 	  fscore = (select finalscore  from stud_fs_result where code_module=cmodlist[i] and code_presentation=cpreslist[i] and id_student=studlist[i]);
+	      fresult = (select final_result  from stud_fs_result where code_module=cmodlist[i] and code_presentation=cpreslist[i] and id_student=studlist[i]);
+	      
+	      if ((fresult='Fail' or fresult='Withdrawn') and fscore < 25.00)
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' F ');
+
+	      elsif ((fresult='Fail' or fresult='Withdrawn') and fscore >= 25.00)
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' E ');
+
+	      elsif (fresult='Pass' and fscore <= 45.00)
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' D ');
+
+	      elsif (fresult='Pass' and (fscore > 45.00 and fscore <= 60.00))
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' C ');
+	      
+	      elsif (fresult='Pass' and (fscore > 60.00 and fscore <= 75 ))
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' B ');
+
+	      elsif (fresult='Pass' and fscore > 75.00 )
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' A ');
+
+	      elsif (fresult='Distinction' and fscore < 75.00 )
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' B ');
+	     
+	      elsif (fresult='Distinction' and fscore >= 75.00 )
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' A ');
+
+	      elsif (fresult='Distinction')
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' A ');
+	      
+	      elsif (fresult='Pass')
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' B ');
+
+	      elsif (fresult='Fail')
+	      then insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' E ');
+
+	      else
+	      insert into stud_grade values (cmodlist[i],cpreslist[i],studlist[i],studname,fresult,' F ');
+	      end if;
+
+	      i=i+1;
+
+	      end loop;
+
+	      end; $$ language plpgsql ;
+
+
+
+	7.62-- tr_sub_dat_stid_stnm_hapamt_stamt
+	 -- give all assessment realted to courese and their type and weightage
+
+	 create or replace function get_course_amtlist(code_module varchar,code_presentation varchar) returns 
+	 	table(id_assessment integer,
+	 		assessment_type varchar(45),
+	 		weight numeric)
+	 	as $$
+	 	begin
+	 	return query
+	 	select tr_sub_dat_stid_stnm_hapamt_stamt.id_assessment,tr_sub_dat_stid_stnm_hapamt_stamt.assessment_type,
+	 	tr_sub_dat_stid_stnm_hapamt_stamt.weight from tr_sub_dat_stid_stnm_hapamt_stamt
+	 	where tr_sub_dat_stid_stnm_hapamt_stamt.code_module='FFF'
+	 	 and tr_sub_dat_stid_stnm_hapamt_stamt.code_presentation='2013J'
+	 	group by tr_sub_dat_stid_stnm_hapamt_stamt.id_assessment,tr_sub_dat_stid_stnm_hapamt_stamt.assessment_type,
+	 	tr_sub_dat_stid_stnm_hapamt_stamt.weight
+	 	order by tr_sub_dat_stid_stnm_hapamt_stamt.weight,tr_sub_dat_stid_stnm_hapamt_stamt.assessment_type;
+	 	end;$$ language 'plpgsql';
+
+
+	 7.63----  get top student for a assessment for acourse --stud_wgt_hapass_score--  
+
+	   create or replace function get_top_course_amt_stud(code_module varchar,code_presentation varchar,id_assessment integer,cnt integer) returns
+	   	 table(id_student integer,
+	   	 	   student_name varchar(45),
+	   	 	   score integer
+	   	 	)
+	   	 as $$
+	   	 begin return query
+	   	 select stud_wgt_hapass_score.id_student,stud_wgt_hapass_score.student_name,stud_wgt_hapass_score.score
+	   	 from stud_wgt_hapass_score where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2
+	   	 and stud_wgt_hapass_score.id_assessment=$3 and stud_wgt_hapass_score.score is not null
+	   	 order by stud_wgt_hapass_score.score desc
+	   	 limit $4;
+	  end;$$ language 'plpgsql';
+
+
+	 7.64--  get LOWEST SCORE student for a assessment for a course  
+	 --stud_wgt_hapass_score--  
+
+	   create or replace function get_low_course_amt_stud(code_module varchar,code_presentation varchar,id_assessment integer,cnt integer) returns
+	   	 table(id_student integer,
+	   	 	   student_name varchar(45),
+	   	 	   score integer
+	   	 	)
+	   	 as $$
+	   	 begin return query
+	   	 select stud_wgt_hapass_score.id_student,stud_wgt_hapass_score.student_name,stud_wgt_hapass_score.score
+	   	 from stud_wgt_hapass_score where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2
+	   	 and stud_wgt_hapass_score.id_assessment=$3 and stud_wgt_hapass_score.score is not null
+	   	 order by stud_wgt_hapass_score.score ASC
+	   	 limit $4;
+	  end;$$ language 'plpgsql';
+
+
+	 7.65  ----------------- function for get average, minimum , maximum for course particular assessment ---------------------------
+	-- stud_wgt_hapass_score.score
+
+	create or replace function get_course_amt_desval(code_module varchar,code_presentation varchar,id_assessment integer,
+		           desval varchar) returns numeric
+		as $$
+		declare result numeric;
+		begin
+		if $4 = 'Average' 
+		  then select into result (avg(stud_wgt_hapass_score.score)::numeric) from stud_wgt_hapass_score
+		       where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2
+		        and stud_wgt_hapass_score.id_assessment=$3;
+		       	return result;
+		elsif $4 = 'Minimum' 
+		  then select into result (min(stud_wgt_hapass_score.score)::numeric) from stud_wgt_hapass_score
+		       where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2
+		       and stud_wgt_hapass_score.id_assessment=$3;
+		       	return result;
+		elsif $4 = 'Maximum' 
+		 then select into result (max(stud_wgt_hapass_score.score)::numeric) from stud_wgt_hapass_score
+		      where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2
+		      and stud_wgt_hapass_score.id_assessment=$3;
+		      	return result;
+		else RAISE EXCEPTION 'incorrect input';  	
+		end if;
+	end;$$ language 'plpgsql';	
+
+
+	7.66----------------- function for sumary for course  particular assessment - average,minimum,maximum  --------------------
+	-- stud_wgt_hapass_score.score
+
+	create or replace function get_course_amt_studperfor(code_module varchar,code_presentation varchar,id_assessment integer) returns 
+		table(Criteria text,
+			  value numeric)
+		as $$
+		begin
+		return query
+		select 'Average' as Criteria,(avg(stud_wgt_hapass_score.score)::numeric) from stud_wgt_hapass_score
+		where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2 and stud_wgt_hapass_score.id_assessment=$3
+		union
+		select 'Minimum' as Criteria,(min(stud_wgt_hapass_score.score)::numeric) from stud_wgt_hapass_score
+		where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2 and stud_wgt_hapass_score.id_assessment=$3
+		union
+		select 'Maximum' as Criteria,(max(stud_wgt_hapass_score.score)::numeric) from stud_wgt_hapass_score
+		where stud_wgt_hapass_score.code_module=$1 and stud_wgt_hapass_score.code_presentation=$2 and stud_wgt_hapass_score.id_assessment=$3;
+	end;$$ language 'plpgsql';	
+
+
+	7.67---
+	create or replace function get_course_vle_cnt(code_module varchar,code_presentation varchar) returns 
+		table(activity_type varchar,
+			  count bigint)
+		as $$
+		begin
+		return query
+		select vle_mat_cont.activity_type,vle_mat_cont.count from vle_mat_cont
+		where vle_mat_cont.code_module=$1 and vle_mat_cont.code_presentation=$2
+		order by vle_mat_cont.count;
+	end;$$ language 'plpgsql';	
+
+
+
+	7.68---
+	create or replace function stud_act_day_visit(code_module varchar,code_presentation varchar,id_student integer
+		,id_site integer,date integer)
+	returns integer
+	as $$
+	declare result integer;
+	begin
+	select into result (get_stud_act_day_visit.count) from get_stud_act_day_visit where get_stud_act_day_visit.code_module=$1 and
+	get_stud_act_day_visit.code_presentation =$2 and get_stud_act_day_visit.id_student=$3 and get_stud_act_day_visit.id_site=$4
+	 and get_stud_act_day_visit.date=$5; 
+	 return result;
+	 end;$$ language 'plpgsql';	
+
+
+
+	7.69---
+	create or replace function stud_day_visit(code_module varchar,code_presentation varchar,id_student integer,date integer)
+	returns integer
+	as $$
+	declare result integer;
+	begin
+	select into result (get_stud_day_visit.count) from get_stud_day_visit where get_stud_day_visit.code_module=$1 and
+	get_stud_day_visit.code_presentation =$2 and get_stud_day_visit.id_student=$3 and get_stud_day_visit.date=$4; 
+	 return result;
+	 end;$$ language 'plpgsql';	
+
+
+	7.70---
+	create or replace function stud_visit(code_module varchar,code_presentation varchar,id_student integer)
+	returns integer
+	as $$
+	declare result integer;
+	begin
+	select into result (get_stud_visit.count) from get_stud_visit where get_stud_visit.code_module=$1 and
+	get_stud_visit.code_presentation =$2 and get_stud_visit.id_student=$3;
+	 return result;
+	 end;$$ language 'plpgsql';	
+
+
+	7.71---
+	 create or replace function coursevle_visit(code_module varchar,code_presentation varchar)
+	returns integer
+	as $$
+	declare result integer;
+	begin
+	select into result (get_visit.count) from get_visit where get_visit.code_module=$1 and
+	get_visit.code_presentation =$2;
+	 return result;
+	 end;$$ language 'plpgsql';
+
+
+
+select * from stud_visit('FFF','2013J',2137171)
+
+select * from stud_visit(%s,%s,%s)
